@@ -1,0 +1,2058 @@
+<!DOCTYPE html>
+<html lang="my">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Goldex | Premium Results</title>
+<style>
+/* ================= GLOBAL & FONTS ================= */
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Pyidaungsu', 'Myanmar Text', sans-serif; }
+body { background-color: #ffffff; color: #333; -webkit-tap-highlight-color: transparent; }
+
+/* ================= HEADER ================= */
+.top-header {
+    background-color: #3b6488;
+    color: white;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+.top-header h1 { font-size: 20px; font-weight: bold; cursor: pointer; }
+.user-icon {
+    width: 36px; height: 36px;
+    background-color: rgba(255,255,255,0.2);
+    border-radius: 50%;
+    display: flex; justify-content: center; align-items: center;
+    font-size: 20px;
+}
+
+/* ================= MAIN CONTENT ================= */
+.container { padding: 20px; max-width: 500px; margin: 0 auto; }
+
+/* Main Result Display */
+.main-result-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    height: 130px;
+}
+.big-number {
+    font-size: 100px;
+    font-weight: 900;
+    color: #3b6488;
+    letter-spacing: -2px;
+    transition: opacity 0.3s ease;
+}
+.goldex-3d-box {
+    position: absolute;
+    right: 0;
+    top: 20px;
+    background-color: #3b6488;
+    color: white;
+    border-radius: 8px;
+    text-align: center;
+    width: 90px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+.goldex-3d-box .title { font-size: 12px; padding: 5px; background-color: rgba(0,0,0,0.1); border-bottom: 1px solid rgba(255,255,255,0.2); }
+.goldex-3d-box .value { font-size: 20px; font-weight: bold; padding: 8px 0; color: #ffeb3b; }
+
+/* Updated Time */
+.updated-time { text-align: center; font-size: 14px; color: #555; margin-bottom: 30px; font-weight: 500; }
+
+/* 6 Times Grid */
+.times-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 30px; }
+.time-card {
+    background-color: #3b6488;
+    border-radius: 12px;
+    overflow: hidden;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+.time-card .time-title {
+    background-color: rgba(0,0,0,0.1);
+    color: white;
+    padding: 10px;
+    font-size: 16px;
+    font-weight: bold;
+    border-bottom: 1px solid rgba(255,255,255,0.2);
+}
+.time-card .time-value {
+    color: #ffeb3b;
+    font-size: 24px;
+    font-weight: bold;
+    padding: 15px;
+    min-height: 60px;
+    display: flex; justify-content: center; align-items: center;
+}
+
+/* Bottom Buttons */
+.bottom-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+.btn-white {
+    background-color: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    padding: 15px;
+    text-align: center;
+    font-weight: bold;
+    color: #3b6488;
+    font-size: 15px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    cursor: pointer;
+}
+
+/* ================= ADMIN MODALS (HIDDEN) ================= */
+.modal-overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.6);
+    display: none; justify-content: center; align-items: center;
+    z-index: 1000;
+    padding: 20px;
+}
+.modal-overlay.active { display: flex; }
+
+.login-box, .admin-panel {
+    background: #fff; width: 100%; max-width: 400px;
+    border-radius: 16px; padding: 24px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    max-height: 90vh; overflow-y: auto;
+}
+.login-box h2 { text-align: center; color: #3b6488; margin-bottom: 20px; }
+.login-box input {
+    width: 100%; padding: 12px; margin-bottom: 15px;
+    border: 1px solid #ccc; border-radius: 8px; font-size: 16px;
+}
+.login-box button {
+    width: 100%; padding: 12px; background: #3b6488; color: white;
+    border: none; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer;
+}
+
+/* Admin Panel Form */
+.admin-panel h2 { text-align: center; color: #3b6488; margin-bottom: 20px; }
+.admin-form-group { margin-bottom: 15px; display: flex; align-items: center; justify-content: space-between; background: #f5f7fa; padding: 10px; border-radius: 8px; border: 1px solid #e0e0e0; }
+.admin-form-group label { font-weight: bold; color: #333; }
+.admin-form-group input {
+    width: 80px; padding: 8px; text-align: center; font-size: 18px;
+    border: 2px solid #3b6488; border-radius: 8px; font-weight: bold; color: #3b6488;
+}
+.admin-note { font-size: 12px; color: #e94560; margin-bottom: 15px; text-align: center; }
+.admin-actions { display: flex; gap: 10px; margin-top: 20px; }
+.btn-save { flex: 1; padding: 12px; background: #4caf50; color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; }
+.btn-close { flex: 1; padding: 12px; background: #f44336; color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; }
+
+/* Top secret box for admin (Goldex 3D control) */
+.admin-3d-control { margin-top: 20px; padding-top: 20px; border-top: 1px dashed #ccc; }
+.admin-3d-control label { font-weight: bold; color: #333; display: block; margin-bottom: 8px; }
+.admin-3d-control input { width: 100%; padding: 10px; font-size: 18px; text-align: center; border: 2px solid #3b6488; border-radius: 8px; }
+
+.error-msg { color: red; text-align: center; font-size: 14px; margin-bottom: 10px; display: none; }
+
+/* Animation for changing numbers */
+@keyframes popIn {
+    0% { transform: scale(0.8); opacity: 0.5; }
+    100% { transform: scale(1); opacity: 1; }
+}
+.animate-pop { animation: popIn 0.3s ease-out; }
+
+
+/* ===== PREMIUM EMBOSSED 3D UI ===== */
+:root {
+    --lux-bg: #081426;
+    --lux-panel: #112743;
+    --lux-panel2: #173656;
+    --lux-blue: #285b88;
+    --lux-gold: #f5cf72;
+    --lux-gold2: #ffe9a8;
+    --lux-text: #edf5ff;
+    --lux-muted: #a9bdd3;
+}
+body {
+    background:
+        radial-gradient(ellipse at 50% -15%, #315d85 0%, transparent 55%),
+        linear-gradient(160deg, #081426, #0b1b30 55%, #102945);
+    color: var(--lux-text);
+    min-height: 100vh;
+}
+.top-header {
+    background: linear-gradient(145deg, #244e76, #10253e 70%, #0a1728);
+    border-bottom: 1px solid rgba(245,207,114,.38);
+    box-shadow: 0 8px 22px rgba(0,0,0,.42),
+                inset 0 1px 0 rgba(255,255,255,.17);
+}
+.top-header h1 {
+    color: var(--lux-gold2);
+    text-shadow: 0 2px 0 #503c16, 0 4px 12px rgba(0,0,0,.65);
+}
+.user-icon {
+    color: var(--lux-gold2);
+    background: linear-gradient(145deg, #355f86, #10243b);
+    border: 1px solid rgba(255,233,168,.5);
+    box-shadow: 5px 5px 12px rgba(0,0,0,.4),
+                inset 2px 2px 5px rgba(255,255,255,.15),
+                inset -3px -3px 6px rgba(0,0,0,.25);
+}
+.big-number {
+    color: var(--lux-gold2);
+    text-shadow: 0 2px 0 #73501b, 0 5px 0 #342a1d,
+                 0 10px 22px rgba(0,0,0,.65);
+}
+.goldex-3d-box {
+    background: linear-gradient(145deg, #315f88, #10233a);
+    border: 1px solid rgba(245,207,114,.55);
+    box-shadow: 7px 7px 16px rgba(0,0,0,.4),
+                inset 2px 2px 5px rgba(255,255,255,.16),
+                inset -3px -3px 7px rgba(0,0,0,.3);
+}
+.goldex-3d-box .title {
+    color: var(--lux-gold2);
+    background: rgba(0,0,0,.2);
+}
+.goldex-3d-box .value {
+    color: var(--lux-gold2);
+    text-shadow: 0 2px 8px rgba(245,207,114,.28);
+}
+.updated-time { color: var(--lux-muted); }
+.time-card {
+    background: linear-gradient(145deg, #244d73, #10233b);
+    border: 1px solid rgba(180,211,241,.16);
+    box-shadow: 7px 7px 16px rgba(0,0,0,.34),
+                inset 2px 2px 5px rgba(255,255,255,.10),
+                inset -3px -3px 7px rgba(0,0,0,.22);
+    transition: transform .2s ease, box-shadow .2s ease;
+}
+.time-card:active {
+    transform: translateY(2px) scale(.99);
+    box-shadow: inset 4px 4px 9px rgba(0,0,0,.28);
+}
+.time-card .time-title {
+    color: var(--lux-gold2);
+    background: rgba(0,0,0,.18);
+}
+.time-card .time-value {
+    color: var(--lux-gold2);
+    text-shadow: 0 2px 8px rgba(245,207,114,.22);
+}
+.bottom-buttons { gap: 13px; }
+.btn-white {
+    color: var(--lux-gold2);
+    background: linear-gradient(145deg, #244c70, #10233b);
+    border: 1px solid rgba(245,207,114,.35);
+    border-radius: 13px;
+    box-shadow: 6px 6px 12px rgba(0,0,0,.35),
+                inset 2px 2px 5px rgba(255,255,255,.10),
+                inset -3px -3px 6px rgba(0,0,0,.22);
+    text-shadow: 0 1px 4px rgba(0,0,0,.45);
+    transition: transform .18s ease, box-shadow .18s ease;
+    min-height: 54px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.btn-white:active,
+.btn-white.active {
+    transform: translateY(2px);
+    background: linear-gradient(145deg, #386c96, #183653);
+    box-shadow: inset 4px 4px 8px rgba(0,0,0,.3),
+                inset -2px -2px 5px rgba(255,255,255,.08);
+}
+.result-page {
+    display: none;
+    margin-top: 20px;
+    padding: 18px;
+    border-radius: 16px;
+    color: var(--lux-text);
+    background: linear-gradient(145deg, #1b3b5a, #0d1e32);
+    border: 1px solid rgba(245,207,114,.3);
+    box-shadow: 8px 8px 18px rgba(0,0,0,.34),
+                inset 1px 1px 4px rgba(255,255,255,.08);
+}
+.result-page.active { display: block; animation: premiumEnter .25s ease-out; }
+.result-page h2 {
+    color: var(--lux-gold2);
+    font-size: 20px;
+    margin-bottom: 12px;
+    text-shadow: 0 2px 8px rgba(0,0,0,.45);
+}
+.result-page p { color: var(--lux-muted); line-height: 1.8; }
+.page-result-number {
+    margin: 12px 0;
+    padding: 18px;
+    text-align: center;
+    font-size: 36px;
+    font-weight: 900;
+    color: var(--lux-gold2);
+    border-radius: 12px;
+    background: linear-gradient(145deg, #274d70, #0b1c30);
+    border: 1px solid rgba(245,207,114,.35);
+    box-shadow: inset 3px 3px 7px rgba(0,0,0,.25),
+                4px 4px 10px rgba(0,0,0,.2);
+}
+.page-back {
+    margin-top: 14px;
+    padding: 11px 16px;
+    border: 1px solid rgba(245,207,114,.4);
+    border-radius: 10px;
+    color: var(--lux-gold2);
+    background: linear-gradient(145deg, #315f88, #10233b);
+    box-shadow: 4px 4px 9px rgba(0,0,0,.3);
+    font-size: 14px;
+    font-weight: bold;
+}
+.login-box, .admin-panel {
+    background: linear-gradient(145deg, #f7fbff, #dfeaf5);
+}
+@keyframes premiumEnter {
+    from { opacity: 0; transform: translateY(7px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+/* ===== END PREMIUM EMBOSSED 3D UI ===== */
+
+
+/* ===== ROYAL_CASINO_LUXURY_V1 ===== */
+
+:root {
+  --casino-bg: #090609;
+  --casino-panel: #160910;
+  --casino-wine: #390b20;
+  --casino-red: #6d1232;
+  --casino-gold: #e6bd67;
+  --casino-gold-light: #fff0b5;
+  --casino-gold-dark: #8b5b19;
+  --casino-text: #fff5e2;
+  --casino-muted: #c6aeb6;
+}
+
+/* Main luxury background */
+html {
+  background: var(--casino-bg);
+  color-scheme: dark;
+}
+
+body {
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(112, 19, 51, .32), transparent 48%),
+    radial-gradient(ellipse at 0% 45%, rgba(116, 77, 21, .10), transparent 42%),
+    linear-gradient(155deg, #10070c 0%, #080609 52%, #190812 100%);
+  color: var(--casino-text);
+}
+
+/* Headings and labels */
+h1, h2, h3 {
+  color: var(--casino-gold-light);
+  text-shadow: 0 2px 12px rgba(230, 189, 103, .20);
+}
+
+p, label {
+  color: var(--casino-muted);
+}
+
+/* Six time result cards */
+.time-card {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse at 50% -15%, rgba(145, 35, 70, .42), transparent 65%),
+    linear-gradient(145deg, #35101f 0%, #170911 48%, #090609 100%);
+  border: 1px solid var(--casino-gold-dark);
+  border-radius: 19px;
+  box-shadow:
+    inset 0 0 0 2px rgba(230, 189, 103, .12),
+    inset 0 0 22px rgba(123, 24, 55, .22),
+    0 7px 20px rgba(0, 0, 0, .52),
+    0 0 13px rgba(170, 111, 34, .08);
+  color: var(--casino-text);
+  transition: border-color .25s ease, box-shadow .25s ease,
+              transform .25s ease, filter .25s ease;
+}
+
+/* Double ornamental frame */
+.time-card::before {
+  content: "";
+  position: absolute;
+  inset: 5px;
+  z-index: -1;
+  pointer-events: none;
+  border: 1px solid rgba(230, 189, 103, .43);
+  border-radius: 15px;
+  background:
+    radial-gradient(circle at 0 0, rgba(255, 224, 151, .12), transparent 23%),
+    radial-gradient(circle at 100% 100%, rgba(255, 224, 151, .08), transparent 25%);
+}
+
+/* Curved casino corner ornaments */
+.time-card::after {
+  content: "❧";
+  position: absolute;
+  z-index: 2;
+  top: 5px;
+  right: 9px;
+  pointer-events: none;
+  color: var(--casino-gold);
+  font-family: Georgia, serif;
+  font-size: 24px;
+  line-height: 1;
+  opacity: .8;
+  text-shadow: 0 0 9px rgba(230, 189, 103, .32);
+}
+
+.time-card:hover {
+  border-color: var(--casino-gold-light);
+  box-shadow:
+    inset 0 0 0 2px rgba(255, 224, 151, .18),
+    0 9px 25px rgba(0, 0, 0, .58),
+    0 0 19px rgba(230, 189, 103, .20);
+  filter: brightness(1.08);
+}
+
+.time-card:active {
+  transform: scale(.985);
+}
+
+.time-card .time-title {
+  color: var(--casino-gold);
+  font-weight: 800;
+  letter-spacing: 1.1px;
+  text-transform: uppercase;
+  text-shadow: 0 1px 8px rgba(230, 189, 103, .20);
+}
+
+.time-card .time-value {
+  color: var(--casino-gold-light);
+  font-weight: 900;
+  text-shadow:
+    0 1px 0 #8b5b19,
+    0 2px 0 #59380e,
+    0 4px 10px rgba(0, 0, 0, .8),
+    0 0 16px rgba(230, 189, 103, .23);
+}
+
+/* General panels */
+.container,
+.panel,
+.card,
+.result-page,
+#page-results2d,
+#page-goldex3d {
+  color: var(--casino-text);
+}
+
+.result-page {
+  background: transparent;
+}
+
+/* Luxury buttons */
+button,
+.btn-white,
+button[type="button"],
+button[type="submit"] {
+  transition: background .2s ease, border-color .2s ease,
+              box-shadow .2s ease, transform .2s ease;
+}
+
+.btn-white,
+#mainNavigation .btn-white {
+  background: linear-gradient(145deg, #3c1124, #190911) !important;
+  border: 1px solid var(--casino-gold-dark) !important;
+  border-radius: 13px !important;
+  color: var(--casino-gold-light) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 230, 173, .10),
+              0 4px 12px rgba(0, 0, 0, .30);
+}
+
+.btn-white.active,
+#mainNavigation .btn-white.active {
+  background: linear-gradient(135deg, #f2d48a, #b47a27 52%, #7d4a13) !important;
+  border-color: #fff0b5 !important;
+  color: #1b0c0b !important;
+  box-shadow: 0 0 18px rgba(230, 189, 103, .25),
+              inset 0 1px 0 rgba(255, 255, 255, .45);
+}
+
+button:not(.btn-white) {
+  border-color: var(--casino-gold-dark);
+}
+
+button:focus-visible,
+input:focus-visible {
+  outline: 2px solid var(--casino-gold);
+  outline-offset: 3px;
+}
+
+/* 2D and Goldex 3D result displays */
+.page-result-number {
+  color: var(--casino-gold-light) !important;
+  text-shadow:
+    0 2px 0 #80531c,
+    0 5px 15px rgba(0, 0, 0, .8),
+    0 0 24px rgba(230, 189, 103, .24);
+}
+
+/* Admin/login modal */
+.modal-content,
+.modal-box,
+.admin-panel,
+#loginModal .modal-content,
+#adminPanelModal .modal-content {
+  background:
+    radial-gradient(ellipse at top, rgba(102, 23, 49, .25), transparent 65%),
+    linear-gradient(150deg, #21101a, #0d080c) !important;
+  color: var(--casino-text) !important;
+  border: 1px solid var(--casino-gold-dark) !important;
+  box-shadow: 0 18px 55px rgba(0, 0, 0, .65),
+              0 0 18px rgba(230, 189, 103, .08);
+}
+
+.admin-form-group {
+  background: linear-gradient(145deg, #29101b, #140b10) !important;
+  border: 1px solid rgba(194, 145, 65, .42) !important;
+  border-radius: 12px !important;
+}
+
+.admin-form-group label {
+  color: var(--casino-gold-light) !important;
+}
+
+input,
+select,
+textarea {
+  background: #0d080c !important;
+  color: var(--casino-text) !important;
+  border: 1px solid #765025 !important;
+  border-radius: 9px;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: #9e828d !important;
+}
+
+.error-msg {
+  color: #ff9caa !important;
+}
+
+/* Goldex 3D display frame */
+#mainGoldex3D,
+#pageGoldex3DValue {
+  text-shadow: 0 0 18px rgba(230, 189, 103, .28);
+}
+
+/* Keep decorative effects from blocking taps */
+.time-card::before,
+.time-card::after {
+  pointer-events: none;
+}
+
+/* Small-screen polish without changing card dimensions */
+@media (max-width: 480px) {
+  .time-card {
+    border-radius: 16px;
+  }
+
+  .time-card::after {
+    font-size: 21px;
+  }
+}
+
+/* ===== END ROYAL_CASINO_LUXURY_V1 ===== */
+
+
+/* GOLDEN_Goldex_ROYAL_BACKGROUND_V2 */
+:root {
+  --casino-bg: #080609;
+  --casino-panel: #160b12;
+  --casino-burgundy: #4b1028;
+  --casino-gold: #f2cf75;
+  --casino-gold-light: #fff0b8;
+}
+
+html, body {
+  background: #080609 !important;
+  color: #f5e8c8;
+}
+
+body {
+  background-image:
+    radial-gradient(ellipse at top, rgba(112, 25, 55, .28), transparent 58%),
+    linear-gradient(180deg, #10070d 0%, #080609 55%, #120810 100%) !important;
+  background-attachment: fixed;
+}
+
+#secretTitle {
+  color: #f2cf75 !important;
+  text-shadow:
+    0 0 6px rgba(242, 207, 117, .65),
+    0 0 18px rgba(170, 110, 25, .45);
+  animation: goldenGoldexTitleGlow 2.8s ease-in-out infinite alternate;
+}
+
+@keyframes goldenGoldexTitleGlow {
+  from {
+    text-shadow: 0 0 5px rgba(242, 207, 117, .45);
+  }
+  to {
+    text-shadow:
+      0 0 9px rgba(255, 224, 145, .9),
+      0 0 22px rgba(185, 118, 30, .7);
+  }
+}
+
+/* Main sections */
+#page-results2d,
+#page-goldex3d,
+.result-page {
+  background-color: #0b080c;
+  color: #f5e8c8;
+}
+
+/* Premium title and section headings */
+h1, h2, h3,
+.result-page h2 {
+  color: #f2cf75;
+}
+
+/* Five-click secret admin title remains tappable */
+#secretTitle {
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+/* END GOLDEN_Goldex_ROYAL_BACKGROUND_V2 */
+
+
+/* GOLDEN_Goldex_REMOVE_MAIN_3D_CARD */
+.main-result-section {
+    justify-content: center;
+}
+
+
+/* GOLDEN_Goldex_ROYAL_LUXURY_V1 */
+
+/* Royal black and burgundy background — no blue */
+:root {
+    --gd-bg: #090507;
+    --gd-panel: #1b080f;
+    --gd-burgundy: #510d24;
+    --gd-gold: #f6d477;
+    --gd-gold-light: #fff2bd;
+    --gd-text: #fff0d0;
+}
+
+html {
+    min-height: 100%;
+    background: var(--gd-bg);
+}
+
+body {
+    background:
+        radial-gradient(ellipse at 50% 0%, rgba(126, 27, 50, .34), transparent 58%),
+        radial-gradient(ellipse at 50% 45%, rgba(114, 56, 10, .13), transparent 70%),
+        linear-gradient(180deg, #17070d 0%, #090507 55%, #16070c 100%) !important;
+    background-attachment: fixed !important;
+    color: var(--gd-text) !important;
+}
+
+/* Royal header */
+.top-header {
+    position: relative;
+    overflow: hidden;
+    background:
+        linear-gradient(135deg, #17070d, #4a0b20 52%, #17070d) !important;
+    color: var(--gd-gold-light) !important;
+    border-bottom: 1px solid #d5a94b;
+    box-shadow:
+        0 5px 24px rgba(0,0,0,.6),
+        0 2px 16px rgba(230,175,62,.2);
+}
+
+.top-header h1,
+#secretTitle {
+    font-family: Georgia, "Times New Roman", serif !important;
+    font-weight: 900 !important;
+    letter-spacing: 1.5px;
+    color: #f9d66e !important;
+    background: linear-gradient(
+        90deg,
+        #fff2b0,
+        #ffbd54,
+        #ff72bb,
+        #c68cff,
+        #64f0ce,
+        #fff0a0,
+        #ffbd54
+    );
+    background-size: 300% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: gdTitleRainbow 6s linear infinite, gdTitleGlow 2.5s ease-in-out infinite alternate;
+    text-shadow: 0 0 18px rgba(255,190,70,.18);
+}
+
+@keyframes gdTitleRainbow {
+    0% { background-position: 0% 50%; }
+    100% { background-position: 300% 50%; }
+}
+
+@keyframes gdTitleGlow {
+    from { filter: drop-shadow(0 0 2px rgba(255,196,77,.3)); }
+    to { filter: drop-shadow(0 0 10px rgba(255,196,77,.65)); }
+}
+
+.user-icon {
+    color: #ffe5a0 !important;
+    background: linear-gradient(145deg, #5c1830, #17070d) !important;
+    border: 1px solid #e7c36c;
+    box-shadow: 0 0 12px rgba(241,194,81,.2);
+}
+
+/* Main result area */
+.main-result-section {
+    justify-content: center;
+}
+
+.big-number {
+    color: #ffdf78 !important;
+    font-family: Georgia, "Times New Roman", serif !important;
+    font-weight: 900 !important;
+    text-shadow:
+        0 2px 0 #9a5714,
+        0 0 8px rgba(255,210,92,.9),
+        0 0 25px rgba(255,166,35,.45);
+    animation: gdNumberGlow 2.8s ease-in-out infinite alternate;
+}
+
+@keyframes gdNumberGlow {
+    from { filter: brightness(.94); }
+    to { filter: brightness(1.18); }
+}
+
+/* Updated time */
+.updated-time {
+    color: #ffe9a6 !important;
+    background: linear-gradient(110deg, #10090a, #281016, #10090a);
+    border: 1px solid #c99b43;
+    border-radius: 30px;
+    padding: 10px 12px;
+    text-shadow: 0 0 8px rgba(255,210,100,.22);
+    box-shadow: 0 3px 14px rgba(0,0,0,.35);
+}
+
+/* Six colorful luxury result cards */
+.times-grid {
+    gap: 15px !important;
+}
+
+.time-card {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    border-radius: 20px !important;
+    border: 1px solid #e9c65f !important;
+    background:
+        linear-gradient(145deg, #32101f, #10070d 65%, #24100b) !important;
+    box-shadow:
+        inset 0 0 12px rgba(255,255,255,.035),
+        0 5px 15px rgba(0,0,0,.5),
+        0 0 7px rgba(238,188,75,.2) !important;
+    transition: transform .25s ease, box-shadow .25s ease;
+}
+
+.time-card::before {
+    content: "";
+    position: absolute;
+    inset: 3px;
+    z-index: -1;
+    border-radius: 16px;
+    background: var(--gd-card-bg, linear-gradient(145deg,#42102d,#160812));
+    opacity: .95;
+    pointer-events: none;
+}
+
+.time-card::after {
+    content: "";
+    position: absolute;
+    top: -60%;
+    left: -80%;
+    width: 45%;
+    height: 220%;
+    transform: rotate(25deg);
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255,255,255,.13),
+        transparent
+    );
+    animation: gdCardShine 6s ease-in-out infinite;
+    pointer-events: none;
+}
+
+@keyframes gdCardShine {
+    0%, 65% { left: -80%; }
+    100% { left: 150%; }
+}
+
+/* Purple */
+.time-card:nth-child(6n+1) {
+    --gd-card-bg: linear-gradient(145deg,#570b78,#1b092d 65%,#3c0b4b);
+    border-color: #f18bff !important;
+    box-shadow: inset 0 0 12px rgba(219,68,255,.18), 0 0 12px rgba(218,47,255,.22) !important;
+}
+
+/* Emerald green */
+.time-card:nth-child(6n+2) {
+    --gd-card-bg: linear-gradient(145deg,#075a2b,#071b12 65%,#0b4a24);
+    border-color: #8dff78 !important;
+    box-shadow: inset 0 0 12px rgba(67,255,89,.15), 0 0 12px rgba(67,255,89,.2) !important;
+}
+
+/* Ruby red */
+.time-card:nth-child(6n+3) {
+    --gd-card-bg: linear-gradient(145deg,#7c101a,#27080d 65%,#5a100d);
+    border-color: #ff8b55 !important;
+    box-shadow: inset 0 0 12px rgba(255,66,66,.18), 0 0 12px rgba(255,75,45,.2) !important;
+}
+
+/* Turquoise */
+.time-card:nth-child(6n+4) {
+    --gd-card-bg: linear-gradient(145deg,#00615b,#062321 65%,#07453f);
+    border-color: #53ffe2 !important;
+    box-shadow: inset 0 0 12px rgba(37,255,219,.16), 0 0 12px rgba(37,255,219,.2) !important;
+}
+
+/* Amber gold */
+.time-card:nth-child(6n+5) {
+    --gd-card-bg: linear-gradient(145deg,#75400a,#211207 65%,#59300a);
+    border-color: #ffd45d !important;
+    box-shadow: inset 0 0 12px rgba(255,194,57,.17), 0 0 12px rgba(255,181,48,.2) !important;
+}
+
+/* Rose pink */
+.time-card:nth-child(6n+6) {
+    --gd-card-bg: linear-gradient(145deg,#790b3d,#27091b 65%,#500a30);
+    border-color: #ff75bd !important;
+    box-shadow: inset 0 0 12px rgba(255,66,160,.17), 0 0 12px rgba(255,66,160,.2) !important;
+}
+
+.time-card:hover {
+    transform: translateY(-2px);
+}
+
+.time-card .time-title {
+    position: relative;
+    z-index: 1;
+    color: #fff0c9 !important;
+    background: rgba(0,0,0,.28) !important;
+    border-bottom: 1px solid rgba(255,218,133,.4) !important;
+    text-shadow: 0 0 7px rgba(255,220,130,.3);
+}
+
+.time-card .time-value {
+    position: relative;
+    z-index: 1;
+    color: #ffdf78 !important;
+    font-family: Georgia, "Times New Roman", serif !important;
+    font-weight: 900 !important;
+    text-shadow:
+        0 2px 0 #7b3f0b,
+        0 0 8px rgba(255,214,94,.65);
+}
+
+/* Goldex 3D panel if used on its own page */
+.goldex-3d-box {
+    background: linear-gradient(145deg,#551027,#16070d) !important;
+    color: #ffedba !important;
+    border: 1px solid #e7c45f;
+    box-shadow: 0 0 14px rgba(235,185,67,.2);
+}
+
+.goldex-3d-box .value {
+    color: #ffdf78 !important;
+}
+
+/* Bottom navigation/buttons */
+.bottom-buttons {
+    gap: 12px !important;
+}
+
+.bottom-buttons button,
+.bottom-buttons .btn-white,
+button.btn-white {
+    color: #ffe8a0 !important;
+    background: linear-gradient(145deg,#291018,#0b0809 70%,#28120c) !important;
+    border: 1px solid #d8ad4d !important;
+    box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.08),
+        0 4px 12px rgba(0,0,0,.42),
+        0 0 6px rgba(228,177,64,.16);
+}
+
+.bottom-buttons button:active,
+.bottom-buttons .btn-white:active {
+    transform: scale(.98);
+}
+
+/* Keep form controls readable */
+input, select, textarea {
+    color: #f9edda;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    #secretTitle, .top-header h1, .time-card::after, .big-number {
+        animation: none !important;
+    }
+}
+
+/* END GOLDEN_Goldex_ROYAL_LUXURY_V1 */
+
+
+
+/* GOLDEN_Goldex_CARD_ORNAMENT_V2 */
+
+/* Layered royal frame and sculpted curves */
+.times-grid .time-card {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    border: 2px solid #e8c76d !important;
+    border-radius: 24px !important;
+    background:
+        linear-gradient(145deg, #38101f, #10070c 58%, #28100e) !important;
+    box-shadow:
+        inset 0 0 0 2px rgba(255,226,153,.13),
+        inset 0 0 18px rgba(255,197,73,.09),
+        0 7px 18px rgba(0,0,0,.55),
+        0 0 12px rgba(230,189,103,.15) !important;
+}
+
+/* Inner engraved frame */
+.times-grid .time-card::before {
+    content: "";
+    position: absolute;
+    inset: 6px;
+    z-index: 0;
+    pointer-events: none;
+    border: 1px solid rgba(255,220,130,.7);
+    border-radius: 17px;
+    background:
+        radial-gradient(ellipse at 0 0, rgba(255,230,165,.16), transparent 35%),
+        radial-gradient(ellipse at 100% 100%, rgba(255,230,165,.12), transparent 35%);
+    box-shadow:
+        inset 0 0 12px rgba(255,211,104,.09),
+        0 0 5px rgba(255,214,125,.12);
+}
+
+/* Four ornamental corner curls */
+.times-grid .time-card::after {
+    content: "❧";
+    position: absolute;
+    z-index: 3;
+    top: 3px;
+    right: 8px;
+    font-family: Georgia, serif;
+    font-size: 25px;
+    line-height: 1;
+    color: #ffe6a0;
+    opacity: .95;
+    pointer-events: none;
+    text-shadow: 0 0 7px rgba(255,207,83,.6);
+}
+
+/* Decorative curves on both sides */
+.times-grid .time-card .time-title {
+    position: relative;
+    z-index: 1;
+    border-bottom: 1px solid rgba(255,220,130,.45);
+}
+
+.times-grid .time-card .time-title::before,
+.times-grid .time-card .time-title::after {
+    content: "❧";
+    display: inline-block;
+    margin: 0 7px;
+    color: #ffdc80;
+    font-family: Georgia, serif;
+    font-size: 15px;
+    text-shadow: 0 0 7px rgba(255,207,83,.55);
+}
+
+.times-grid .time-card .time-value {
+    position: relative;
+    z-index: 1;
+    font-weight: 900;
+    text-shadow:
+        0 1px 0 #9a641b,
+        0 3px 0 #59380e,
+        0 5px 10px rgba(0,0,0,.7),
+        0 0 15px rgba(255,220,120,.35);
+}
+
+/* Purple amethyst */
+.times-grid .time-card:nth-child(6n+1) {
+    border-color: #f09aff !important;
+    box-shadow: inset 0 0 0 2px rgba(240,154,255,.2),
+                0 0 13px rgba(207,53,255,.24) !important;
+}
+.times-grid .time-card:nth-child(6n+1)::before {
+    border-color: rgba(240,154,255,.7);
+    background: radial-gradient(ellipse at 50% 0%,rgba(186,50,255,.24),transparent 72%);
+}
+
+/* Emerald */
+.times-grid .time-card:nth-child(6n+2) {
+    border-color: #a0ff8b !important;
+    box-shadow: inset 0 0 0 2px rgba(160,255,139,.18),
+                0 0 13px rgba(56,255,102,.22) !important;
+}
+.times-grid .time-card:nth-child(6n+2)::before {
+    border-color: rgba(160,255,139,.7);
+    background: radial-gradient(ellipse at 50% 0%,rgba(40,220,90,.23),transparent 72%);
+}
+
+/* Ruby */
+.times-grid .time-card:nth-child(6n+3) {
+    border-color: #ff9b69 !important;
+    box-shadow: inset 0 0 0 2px rgba(255,155,105,.18),
+                0 0 13px rgba(255,60,45,.22) !important;
+}
+.times-grid .time-card:nth-child(6n+3)::before {
+    border-color: rgba(255,155,105,.7);
+    background: radial-gradient(ellipse at 50% 0%,rgba(255,45,50,.24),transparent 72%);
+}
+
+/* Turquoise */
+.times-grid .time-card:nth-child(6n+4) {
+    border-color: #65ffec !important;
+    box-shadow: inset 0 0 0 2px rgba(101,255,236,.18),
+                0 0 13px rgba(22,255,218,.22) !important;
+}
+.times-grid .time-card:nth-child(6n+4)::before {
+    border-color: rgba(101,255,236,.7);
+    background: radial-gradient(ellipse at 50% 0%,rgba(0,205,180,.23),transparent 72%);
+}
+
+/* Amber gold */
+.times-grid .time-card:nth-child(6n+5) {
+    border-color: #ffdc72 !important;
+    box-shadow: inset 0 0 0 2px rgba(255,220,114,.2),
+                0 0 13px rgba(255,174,30,.22) !important;
+}
+.times-grid .time-card:nth-child(6n+5)::before {
+    border-color: rgba(255,220,114,.75);
+    background: radial-gradient(ellipse at 50% 0%,rgba(255,160,25,.22),transparent 72%);
+}
+
+/* Rose */
+.times-grid .time-card:nth-child(6n+6) {
+    border-color: #ff8bc5 !important;
+    box-shadow: inset 0 0 0 2px rgba(255,139,197,.18),
+                0 0 13px rgba(255,50,150,.22) !important;
+}
+.times-grid .time-card:nth-child(6n+6)::before {
+    border-color: rgba(255,139,197,.7);
+    background: radial-gradient(ellipse at 50% 0%,rgba(255,40,140,.22),transparent 72%);
+}
+
+/* Elegant light sweep */
+.times-grid .time-card {
+    background-image:
+        linear-gradient(115deg, transparent 20%, rgba(255,255,255,.035) 45%, transparent 65%),
+        linear-gradient(145deg, #38101f, #10070c 58%, #28100e) !important;
+    transition: transform .25s ease, filter .25s ease, box-shadow .25s ease;
+}
+
+.times-grid .time-card:active {
+    transform: scale(.985);
+    filter: brightness(1.12);
+}
+
+/* END GOLDEN_Goldex_CARD_ORNAMENT_V2 */
+
+
+
+/* ================= GOLDEX PREMIUM Goldex THEME ================= */
+:root {
+  --gx-bg: #07111f;
+  --gx-panel: #101f33;
+  --gx-panel-2: #162941;
+  --gx-gold: #f4c45e;
+  --gx-gold-light: #ffe9a6;
+  --gx-text: #f7f4eb;
+  --gx-muted: #b7c4d5;
+  --gx-border: rgba(244,196,94,.28);
+}
+html { background: var(--gx-bg); }
+body {
+  background: radial-gradient(ellipse at top, #1a3450 0%, #0b1728 48%, #050b14 100%);
+  color: var(--gx-text);
+  min-height: 100vh;
+}
+.top-header {
+  background: linear-gradient(120deg, #081321 0%, #142a42 55%, #513d1c 100%);
+  color: var(--gx-gold-light);
+  border-bottom: 1px solid var(--gx-border);
+  box-shadow: 0 8px 28px rgba(0,0,0,.32);
+}
+.top-header h1 {
+  color: var(--gx-gold-light);
+  letter-spacing: 1.8px;
+  text-shadow: 0 0 18px rgba(244,196,94,.25);
+}
+.user-icon {
+  background: linear-gradient(145deg, #f9d77e, #a87520);
+  color: #172235;
+  box-shadow: inset 0 1px 1px rgba(255,255,255,.6), 0 4px 12px #0005;
+}
+.container { color: var(--gx-text); }
+.big-number {
+  color: var(--gx-gold-light);
+  text-shadow: 0 5px 0 #6e4b12, 0 9px 24px rgba(244,196,94,.25);
+}
+.goldex-3d-box {
+  background: linear-gradient(145deg, #1d3550, #0b1728);
+  border: 1px solid var(--gx-border);
+  box-shadow: 0 8px 22px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.08);
+}
+.goldex-3d-box .title,
+.time-card .time-title {
+  background: linear-gradient(110deg, rgba(244,196,94,.18), rgba(255,255,255,.025));
+  color: var(--gx-gold-light);
+  border-bottom: 1px solid var(--gx-border);
+}
+.goldex-3d-box .value,
+.time-card .time-value { color: var(--gx-gold-light); }
+.updated-time { color: var(--gx-muted); }
+.time-card {
+  background: linear-gradient(145deg, #1b314b 0%, #0d1a2b 100%);
+  border: 1px solid var(--gx-border);
+  box-shadow: 0 10px 24px rgba(0,0,0,.25), inset 0 1px 0 rgba(255,255,255,.05);
+  transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease;
+}
+.time-card:active { transform: scale(.985); }
+.btn-white {
+  background: linear-gradient(145deg, #f9d980 0%, #d9a63c 55%, #a9751d 100%);
+  border: 1px solid #ffe9a6;
+  color: #172235;
+  box-shadow: 0 6px 16px rgba(0,0,0,.24), inset 0 1px 0 rgba(255,255,255,.55);
+  transition: transform .18s ease, filter .18s ease;
+}
+.btn-white:active, .login-box button:active, .btn-save:active, .btn-close:active,
+.page-back:active { transform: translateY(1px) scale(.99); filter: brightness(.96); }
+.result-page {
+  background: linear-gradient(145deg, rgba(22,41,65,.98), rgba(8,18,31,.98));
+  color: var(--gx-text);
+  border: 1px solid var(--gx-border);
+  border-radius: 18px;
+  box-shadow: 0 14px 34px rgba(0,0,0,.3);
+}
+.result-page h2 { color: var(--gx-gold-light); }
+.result-page p { color: var(--gx-muted); }
+.page-result-number {
+  color: var(--gx-gold-light) !important;
+  text-shadow: 0 4px 18px rgba(244,196,94,.22);
+}
+.page-back {
+  background: linear-gradient(145deg, #f9d980, #bd882b);
+  color: #172235;
+  border: 1px solid #ffe9a6;
+  border-radius: 10px;
+  font-weight: 800;
+}
+.modal-overlay { background: rgba(1,6,13,.78); backdrop-filter: blur(7px); }
+.login-box, .admin-panel {
+  background: linear-gradient(145deg, #172b43, #0a1524);
+  color: var(--gx-text);
+  border: 1px solid var(--gx-border);
+  box-shadow: 0 22px 60px rgba(0,0,0,.48), inset 0 1px 0 rgba(255,255,255,.05);
+}
+.login-box h2, .admin-panel h2 { color: var(--gx-gold-light); }
+.login-box input, .admin-panel input {
+  background: #091523;
+  color: #fff7df;
+  border: 1px solid rgba(244,196,94,.45);
+  outline-color: var(--gx-gold);
+}
+.admin-form-group {
+  background: #0b192a;
+  border: 1px solid rgba(244,196,94,.2);
+}
+.admin-form-group label { color: #e7edf5; }
+.admin-form-group input { border-color: var(--gx-gold); color: var(--gx-gold-light); }
+.admin-note { color: #ffc1a6; }
+.login-box button, .btn-save {
+  background: linear-gradient(145deg, #f9d980, #b98425);
+  color: #142033;
+  font-weight: 800;
+  box-shadow: 0 5px 14px rgba(0,0,0,.25);
+}
+.btn-close { background: linear-gradient(145deg, #d65d59, #8f292d); }
+/* Keep any result/history tables readable in the dark theme */
+.result-page table, #goldenGoldexHistory table { color: var(--gx-text); }
+.result-page th, #goldenGoldexHistory th {
+  background: #243a52 !important;
+  color: var(--gx-gold-light) !important;
+}
+.result-page td, #goldenGoldexHistory td { border-color: rgba(244,196,94,.16) !important; }
+@media (prefers-reduced-motion: reduce) {
+  .time-card, .btn-white { transition: none; }
+}
+/* ================= END GOLDEX PREMIUM Goldex THEME ================= */
+
+
+/* GOLDEx NEON AMETHYST PREMIUM 3D REDESIGN */
+:root{
+ --gx-bg:#090914;--gx-panel:#15152b;--gx-panel2:#202044;
+ --gx-violet:#9b5cff;--gx-violet2:#6d28d9;--gx-cyan:#38e8ff;
+ --gx-text:#f5f3ff;--gx-muted:#b9b5d2;--gx-line:rgba(155,92,255,.38);
+}
+html,body{background:radial-gradient(ellipse at 15% 0%,#272052 0%,#0b0b18 48%,#070710 100%) !important;color:var(--gx-text)!important;min-height:100%}
+.top-header{background:linear-gradient(125deg,#21123f 0%,#5122a8 48%,#087e9b 100%)!important;color:#fff!important;border-bottom:1px solid rgba(56,232,255,.5)!important;box-shadow:0 9px 28px #0008,inset 0 1px 0 #ffffff30!important}
+.top-header h1{color:#fff!important;text-shadow:0 2px 0 #35106d,0 0 18px #bda0ff!important;letter-spacing:.5px}
+.user-icon{background:linear-gradient(145deg,#b38aff,#493078)!important;border:1px solid #d9c4ff!important;box-shadow:inset 2px 2px 5px #ffffff55,inset -3px -3px 7px #24103f,0 5px 12px #0008!important}
+.container{color:var(--gx-text)!important}
+.main-result-section,.times-grid,.bottom-buttons{filter:drop-shadow(0 8px 12px #0005)}
+.big-number,.page-result-number{color:#bda0ff!important;text-shadow:0 1px 0 #6d28d9,0 3px 0 #4c1d95,0 6px 0 #2e1065,0 10px 18px #000c,0 0 24px #9b5cff99!important}
+.goldex-3d-box,.time-card,.panel,.card,.result-page,.login-box,.admin-panel{
+ background:linear-gradient(145deg,#29234b 0%,#17172e 48%,#101c32 100%)!important;
+ color:#f5f3ff!important;border:1px solid var(--gx-line)!important;border-radius:18px!important;
+ box-shadow:inset 1px 1px 0 #ffffff1c,inset -2px -2px 7px #0005,0 12px 26px #0008,0 0 16px #7c3aed18!important
+}
+.goldex-3d-box{background:linear-gradient(145deg,#6d28d9,#25204b 60%,#07566b)!important;border:1px solid #a78bfa!important;box-shadow:inset 2px 2px 5px #ffffff40,inset -4px -4px 9px #130d2b,0 10px 22px #0009,0 0 18px #9b5cff40!important}
+.goldex-3d-box .title,.time-card .time-title{background:linear-gradient(100deg,#6d28d9,#155e75)!important;color:#fff!important;border-bottom:1px solid #ffffff2b!important;text-shadow:0 1px 3px #0008!important}
+.goldex-3d-box .value,.time-card .time-value{color:#6ff4ff!important;text-shadow:0 2px 0 #07566b,0 0 14px #38e8ff99!important}
+.updated-time{color:#c7c2e6!important}
+.btn-white,.page-back,button{
+ transition:transform .18s ease,filter .18s ease,box-shadow .18s ease;
+}
+.btn-white,.page-back{
+ background:linear-gradient(145deg,#35245e,#17182e 60%,#123448)!important;color:#e9e3ff!important;
+ border:1px solid #8b5cf6!important;border-radius:14px!important;
+ box-shadow:inset 1px 1px 0 #ffffff25,inset -3px -3px 7px #0006,0 7px 0 #100b21,0 11px 18px #0007!important
+}
+.btn-white:active,.page-back:active,button:active{transform:translateY(2px)!important;filter:brightness(1.15)}
+.login-box h2,.admin-panel h2{color:#c4a7ff!important;text-shadow:0 0 12px #9b5cff66!important}
+.login-box input,.admin-panel input{background:#0d0d1d!important;color:#f5f3ff!important;border:1px solid #7452b8!important;border-radius:10px!important}
+.login-box button,.btn-save{background:linear-gradient(135deg,#8b5cf6,#5b21b6 55%,#087e9b)!important;color:#fff!important;border:1px solid #c4b5fd!important;box-shadow:inset 1px 1px 0 #ffffff35,0 6px 0 #21113d,0 10px 16px #0007!important}
+.admin-form-group{background:linear-gradient(135deg,#1e1b36,#111a2a)!important;border:1px solid #514078!important;color:#f5f3ff!important}
+.admin-form-group label{color:#e8e2ff!important}
+.admin-form-group input{border-color:#8b5cf6!important;color:#7cefff!important}
+.modal-overlay{background:rgba(4,4,15,.82)!important;backdrop-filter:blur(8px)}
+a{color:#6ff4ff}
+input:focus,button:focus-visible{outline:2px solid #38e8ff!important;outline-offset:3px}
+@media(max-width:380px){.container{padding:14px}.big-number{font-size:82px}.times-grid{gap:11px}}
+
+</style>
+</head>
+<body>
+
+<!-- ================= USER VIEW (MAIN UI) ================= -->
+<div class="top-header">
+    <!-- Admin Login ဝင်ဖို့ ဒီစာသားကို ၅ ချက်နှိပ်ရမယ် -->
+    <h1 id="secretTitle">Goldex</h1>
+    <div class="user-icon">👤</div>
+</div>
+
+<div class="container">
+    <!-- Main Result -->
+    <div class="main-result-section">
+        <div class="big-number" id="mainBigNumber">--</div>
+    </div>
+
+    <!-- Updated Time -->
+    <div class="updated-time" id="updatedTime">Updated : ----</div>
+
+    <!-- 6 Times Grid -->
+    <div class="times-grid" id="timesGrid">
+        <!-- JS မှ ထည့်ပေးပါမည် -->
+    </div>
+
+    <!-- Bottom Buttons -->
+    <div class="bottom-buttons" id="mainNavigation">
+        <button type="button" class="btn-white" data-section="results2d" onclick="showSection('results2d', this)">🎯 2D Results</button>
+        <button type="button" class="btn-white" data-section="goldex3d" onclick="showSection('goldex3d', this)">💠 3D Results</button>
+        <button type="button" class="btn-white" data-section="holidays" onclick="showSection('holidays', this)">🎉 Holidays</button>
+    </div>
+
+    <section class="result-page" id="page-results2d">
+        <h2>🎯 2D Results</h2>
+        <p>2D Result များအတွက် သီးခြားအချက်အလက်နေရာ</p>
+        <div class="page-result-number" id="page2dValue">--</div>
+        <p id="page2dMessage">2D Result ကို Admin က သတ်မှတ်ပေးရန် လိုအပ်ပါသည်။</p>
+        <button type="button" class="page-back" onclick="showSection('', null)">ပင်မစာမျက်နှာ</button>
+    </section>
+
+    <section class="result-page" id="page-goldex3d">
+        <h2>💠 3D Results</h2>
+        <p>လက်ရှိ Admin သိမ်းဆည်းထားသော 3D Result</p>
+        <div class="page-result-number" id="pageGoldex3DValue">3**</div>
+        <p id="pageGoldex3DTime"></p>
+        <button type="button" class="page-back" onclick="showSection('', null)">ပင်မစာမျက်နှာ</button>
+    </section>
+
+    <section class="result-page" id="page-holidays">
+        <h2>🎉 Holidays</h2>
+        <p>အားလပ်ရက် အချက်အလက်</p>
+        <div class="page-result-number">📅</div>
+        <p>အားလပ်ရက်ရက်စွဲများကို တရားဝင်ကြေညာချက်နှင့် တိုက်ဆိုင်စစ်ဆေးပါ။ ရက်စွဲများသည် နှစ်အလိုက် ပြောင်းလဲနိုင်ပါသည်။</p>
+        <button type="button" class="page-back" onclick="showSection('', null)">ပင်မစာမျက်နှာ</button>
+    </section>
+</div>
+
+<!-- ================= ADMIN LOGIN MODAL ================= -->
+<div class="modal-overlay" id="loginModal">
+    <div class="login-box">
+        <h2>🔐 Admin Login</h2>
+        <p class="error-msg" id="loginError" style="display:none">Login မအောင်မြင်ပါ။ Email/Password ကို စစ်ပါ။</p>
+        <input type="email" id="adminEmail" placeholder="Admin Email ထည့်ပါ" autocomplete="username">
+        <input type="password" id="adminPassword" placeholder="Firebase Password ထည့်ပါ" autocomplete="current-password">
+        <button onclick="checkPassword()">Login</button>
+        <button onclick="closeModal('loginModal')" style="background:#aaa; margin-top:10px;">Cancel</button>
+    </div>
+</div>
+
+<!-- ================= ADMIN CONTROL PANEL MODAL ================= -->
+<div class="modal-overlay" id="adminPanelModal">
+    <div class="admin-panel">
+        <h2>⚙️ Admin Panel</h2>
+        <p class="admin-note">အချိန်တိတိ ရောက်ပါက Main ဂဏန်းသည် ၃၀ မိနစ်ကြာ ရပ်တန့်နေမည်။</p>
+        
+        <div id="adminForm">
+            <!-- JS မှ ထည့်ပေးပါမည် -->
+        </div>
+        
+        <div class="admin-3d-control">
+            <label>2D Result သတ်မှတ်ရန်</label>
+            <input type="text" id="admin2DResult" placeholder="ဥပမာ- 25" maxlength="2" inputmode="numeric">
+        </div>
+
+        <div class="admin-3d-control">
+            <label>3D ရလဒ် သတ်မှတ်ရန်</label>
+            <input type="text" id="adminGoldex3D" placeholder="ဥပမာ- 3**">
+        </div>
+
+        <div class="admin-actions">
+            <button class="btn-save" onclick="saveAdminData()">💾 သိမ်းမည်</button>
+            <button class="btn-close" onclick="closeModal('adminPanelModal')">ပိတ်မည်</button>
+        </div>
+    </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+<script>
+// ================= FIREBASE CONFIG =================
+const firebaseConfig = {
+  apiKey: "AIzaSyDSLHxQV0mLdnkVpx1R43VQhphnzrguoQQ",
+  authDomain: "goldex-25cb5.firebaseapp.com",
+  projectId: "goldex-25cb5",
+  storageBucket: "goldex-25cb5.firebasestorage.app",
+  messagingSenderId: "84766783705",
+  appId: "1:84766783705:web:2864af7f8f5ab761cba6c8",
+  measurementId: "G-VND09PP3LX"
+};
+
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.firestore();
+const RESULTS_DOC = db.collection("results").doc("current");
+let resultsUnsubscribe = null;
+
+// ================= CONFIG =================
+const ADMIN_PASSWORD = '1234'; 
+const DRAW_TIMES = ['4:30 PM', '5:30 PM', '6:30 PM', '7:30 PM', '8:30 PM', '9:30 PM'];
+const STORAGE_KEY = 'millionaire_goldex_data';
+const YANGON_TIMEZONE = 'Asia/Yangon'; // Myanmar Time (UTC+6:30)
+
+// Main Randomizer အတွက် ပြောင်းလဲနိုင်သော အခြေအနေများ
+let isMainNumberFrozen = false;
+let frozenNumber = '';
+let freezeUntil = 0;
+let randomInterval = null;
+let frozenTimeKey = '';
+
+// ================= DATA MANAGEMENT =================
+function getData() {
+    let data = JSON.parse(localStorage.getItem(STORAGE_KEY));
+    if (!data) {
+        data = {
+            goldex3D: '3**',
+            result2D: localStorage.getItem('millionaire_goldex_2d_result') || '',
+            times: {
+                '4:30 PM': '', '5:30 PM': '', '6:30 PM': '',
+                '7:30 PM': '', '8:30 PM': '', '9:30 PM': ''
+            }
+        };
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    }
+    return data;
+}
+
+function saveData(data) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    checkTimeAndUpdateView();
+}
+
+// ================= MAIN NUMBER RANDOMIZER (6 Sec) =================
+function startMainNumberRandomizer() {
+    if (randomInterval) clearInterval(randomInterval);
+    
+    randomInterval = setInterval(() => {
+        // အကယ်၍ ရပ်ထားရမည့်အချိန် မကျော်သေးရင် ဂဏန်းမပြောင်းဘူး
+        if (isMainNumberFrozen) {
+            if (Date.now() >= freezeUntil) {
+                // ၃၀ မိနစ် ပြည့်သွားပြီဆိုရင် ပြန်လွှတ်မယ်
+                isMainNumberFrozen = false;
+                frozenTimeKey = '';
+                freezeUntil = 0;
+            } else {
+                return; // ရပ်ထားစဉ် ဘာမှမလုပ်ဘူး
+            }
+        }
+
+        const bigNumEl = document.getElementById('mainBigNumber');
+        let randomNum = Math.floor(Math.random() * 100);
+        bigNumEl.textContent = String(randomNum).padStart(2, '0');
+        
+        bigNumEl.classList.remove('animate-pop');
+        void bigNumEl.offsetWidth;
+        bigNumEl.classList.add('animate-pop');
+    }, 6000);
+}
+
+// ================= TIME CALCULATION =================
+function getYangonTimeInfo() {
+    const parts = new Intl.DateTimeFormat('en-GB', {
+        timeZone: YANGON_TIMEZONE,
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hourCycle: 'h23'
+    }).formatToParts(new Date());
+
+    const v = {};
+    parts.forEach(part => {
+        if (part.type !== 'literal') v[part.type] = part.value;
+    });
+
+    return new Date(
+        Number(v.year),
+        Number(v.month) - 1,
+        Number(v.day),
+        Number(v.hour),
+        Number(v.minute),
+        Number(v.second)
+    );
+}
+
+// ================= RENDER & CHECK LOGIC =================
+function checkTimeAndUpdateView() {
+    const data = getData();
+    const goldexNow = getYangonTimeInfo();
+    const currentHour = goldexNow.getHours();
+    const currentMinute = goldexNow.getMinutes();
+    const currentSecond = goldexNow.getSeconds();
+    
+    // 3D
+    const mainGoldex3DEl = document.getElementById('mainGoldex3D');
+    if (mainGoldex3DEl) {
+        mainGoldex3DEl.textContent = data.goldex3D;
+    }
+    
+    // Updated Time
+    const y = goldexNow.getFullYear();
+    const m = String(goldexNow.getMonth() + 1).padStart(2, '0');
+    const d = String(goldexNow.getDate()).padStart(2, '0');
+    const h = String(goldexNow.getHours()).padStart(2, '0');
+    const min = String(goldexNow.getMinutes()).padStart(2, '0');
+    const s = String(goldexNow.getSeconds()).padStart(2, '0');
+    document.getElementById('updatedTime').textContent = `Updated : ${y}-${m}-${d} ${h}:${min}:${s}`;
+
+    // 6 Times Grid
+    const grid = document.getElementById('timesGrid');
+    grid.innerHTML = '';
+    
+    DRAW_TIMES.forEach(timeStr => {
+        let displayVal = ''; 
+        let scheduledHour = 0;
+        if (timeStr === '4:30 PM') scheduledHour = 16;
+        if (timeStr === '5:30 PM') scheduledHour = 17;
+        if (timeStr === '6:30 PM') scheduledHour = 18;
+        if (timeStr === '7:30 PM') scheduledHour = 19;
+        if (timeStr === '8:30 PM') scheduledHour = 20;
+        if (timeStr === '9:30 PM') scheduledHour = 21;
+
+        // အချိန်ကျော်ပြီးသားဆိုရင် ဂဏန်းပြမယ်
+        if (currentHour >= scheduledHour) {
+            displayVal = data.times[timeStr] || ''; 
+        }
+
+
+        // MAIN NUMBER FREEZE: သတ်မှတ်ချိန်မှ မိနစ် ၃၀
+        const freezeKey = `${y}-${m}-${d}-${timeStr}`;
+        const resultValue = String(data.times[timeStr] || '').trim();
+
+        if (
+            currentHour === scheduledHour &&
+            currentMinute < 30 &&
+            resultValue !== ''
+        ) {
+            if (frozenTimeKey !== freezeKey) {
+                frozenTimeKey = freezeKey;
+                isMainNumberFrozen = true;
+                frozenNumber = resultValue;
+                freezeUntil = goldexNow.getTime() +
+                    ((30 - currentMinute) * 60000) -
+                    (currentSecond * 1000);
+            }
+
+            if (isMainNumberFrozen && Date.now() < freezeUntil) {
+                document.getElementById('mainBigNumber').textContent =
+                    frozenNumber;
+            }
+        }
+
+        if (isMainNumberFrozen && Date.now() >= freezeUntil) {
+            isMainNumberFrozen = false;
+            frozenTimeKey = '';
+            freezeUntil = 0;
+        }
+
+        const card = document.createElement('div');
+        card.className = 'time-card';
+        card.innerHTML = `
+            <div class="time-title">${timeStr}</div>
+            <div class="time-value">${displayVal}</div>
+        `;
+        grid.appendChild(card);
+    });
+}
+
+// စက္ကန့်တိုင်း လက်ရှိအချိန်ကို စစ်မယ်
+setInterval(checkTimeAndUpdateView, 1000);
+
+// ================= SECRET ADMIN LOGIN (5 Clicks) =================
+let clickCount = 0;
+let clickTimer;
+
+document.getElementById('secretTitle').addEventListener('click', () => {
+    clickCount++;
+    clearTimeout(clickTimer);
+    clickTimer = setTimeout(() => { clickCount = 0; }, 2000);
+
+    if (clickCount === 5) {
+        clickCount = 0;
+        document.getElementById('adminEmail').value = '';
+        document.getElementById('adminPassword').value = '';
+        document.getElementById('loginError').style.display = 'none';
+        document.getElementById('loginModal').classList.add('active');
+    }
+});
+
+// ================= ADMIN FUNCTIONS =================
+async function checkPassword() {
+    const email = document.getElementById('adminEmail').value.trim();
+    const pass = document.getElementById('adminPassword').value;
+    const error = document.getElementById('loginError');
+
+    error.style.display = 'none';
+
+    if (!email || !pass) {
+        error.textContent = 'Email နှင့် Password နှစ်ခုလုံး ထည့်ပါ။';
+        error.style.display = 'block';
+        return;
+    }
+
+    try {
+        const credential = await auth.signInWithEmailAndPassword(email, pass);
+        const uid = credential.user.uid;
+        const adminDoc = await db.collection('admins').doc(uid).get();
+
+        if (!adminDoc.exists || adminDoc.data().active !== true) {
+            await auth.signOut();
+            throw new Error('ဤအကောင့်တွင် Admin ခွင့်ပြုချက် မရှိပါ။');
+        }
+
+        closeModal('loginModal');
+        openAdminPanel();
+    } catch (err) {
+        console.error('Admin login failed:', err);
+        error.textContent = err.message || 'Login မအောင်မြင်ပါ။';
+        error.style.display = 'block';
+    }
+}
+
+function openAdminPanel() {
+    const data = getData();
+    let formHTML = '';
+    DRAW_TIMES.forEach((time, index) => {
+        let val = data.times[time] || '';
+        formHTML += `
+            <div class="admin-form-group">
+                <label>${time}</label>
+                <input type="text" id="adminTime_${index}" value="${val}" placeholder="00">
+            </div>
+        `;
+    });
+
+    document.getElementById('adminForm').innerHTML = formHTML;
+    document.getElementById('admin2DResult').value =
+        data.result2D || localStorage.getItem('millionaire_goldex_2d_result') || '';
+    document.getElementById('adminGoldex3D').value = data.goldex3D || '3**';
+    document.getElementById('adminPanelModal').classList.add('active');
+}
+
+async function saveAdminData() {
+    if (!auth.currentUser) {
+        alert('Firebase Admin Login ပြန်ဝင်ပေးပါ။');
+        return;
+    }
+
+    const data = getData();
+
+    DRAW_TIMES.forEach((time, index) => {
+        const input = document.getElementById(`adminTime_${index}`);
+        data.times[time] = input ? input.value.trim() : '';
+    });
+
+    data.result2D = document.getElementById('admin2DResult').value.trim();
+    localStorage.setItem('millionaire_goldex_2d_result', data.result2D);
+
+    const goldex3d = document.getElementById('adminGoldex3D').value.trim();
+    data.goldex3D = goldex3d || '3**';
+
+    saveData(data);
+
+    try {
+        await RESULTS_DOC.set({
+            times: data.times,
+            result2D: data.result2D,
+            goldex3D: data.goldex3D,
+            updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+        }, { merge: true });
+
+        try {
+            await saveDailyResultsHistory(data);
+        } catch (historyErr) {
+            console.error('Daily History save failed:', historyErr);
+            alert(
+                'လက်ရှိ Result ကို သိမ်းပြီးပါပြီ၊ သို့သော် History သိမ်းမရပါ။\n' +
+                'Firestore Rules ထဲမှာ resultsHistory ခွင့်ပြုချက် ထည့်ပေးပါ။\n' +
+                historyErr.message
+            );
+            return;
+        }
+
+        alert('Golden Goldex: Result နှင့် History ကို Firebase တွင် သိမ်းပြီးပါပြီ။');
+        closeModal('adminPanelModal');
+    } catch (err) {
+        console.error('Firebase save failed:', err);
+        alert('Firebase သိမ်းမရပါ။ Internet၊ Project နှင့် Firestore Rules စစ်ပါ။\n' + err.message);
+    }
+}
+
+// ================= UTILITIES =================
+function closeModal(modalId) {
+    document.getElementById(modalId).classList.remove('active');
+}
+
+async function loadFirebaseResults() {
+    try {
+        const snapshot = await RESULTS_DOC.get();
+
+        if (snapshot.exists) {
+            applyRemoteResults(snapshot.data());
+        }
+    } catch (err) {
+        console.warn('Firebase load failed; using local cache:', err);
+    }
+
+    if (resultsUnsubscribe) resultsUnsubscribe();
+
+    resultsUnsubscribe = RESULTS_DOC.onSnapshot(snapshot => {
+        if (snapshot.exists) applyRemoteResults(snapshot.data());
+    }, err => console.warn('Firebase live sync failed:', err));
+}
+
+function applyRemoteResults(remote) {
+    const current = getData();
+    const merged = {
+        ...current,
+        ...remote,
+        times: { ...current.times, ...(remote.times || {}) }
+    };
+
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(merged));
+    if (merged.result2D !== undefined) {
+        localStorage.setItem('millionaire_goldex_2d_result', merged.result2D || '');
+    }
+
+    checkTimeAndUpdateView();
+    render2DResultsPage();
+    renderGoldex3DPage();
+}
+
+
+// ===== GOLDEN_Goldex_HISTORY_V1 =====
+const HISTORY_COLLECTION = db.collection('resultsHistory');
+
+function getGoldexDateKey() {
+    const parts = new Intl.DateTimeFormat('en-CA', {
+        timeZone: YANGON_TIMEZONE,
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit'
+    }).formatToParts(new Date());
+
+    const v = {};
+    parts.forEach(part => {
+        if (part.type !== 'literal') v[part.type] = part.value;
+    });
+
+    return `${v.year}-${v.month}-${v.day}`;
+}
+
+function escapeHistoryText(value) {
+    return String(value ?? '').replace(/[&<>"']/g, ch => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;'
+    })[ch]);
+}
+
+function ensureHistoryUI() {
+    const page = document.getElementById('page-results2d');
+    if (!page || document.getElementById('goldenGoldexHistory')) return;
+
+    const box = document.createElement('div');
+    box.id = 'goldenGoldexHistory';
+    box.innerHTML = `
+      <div class="gdh-heading">
+        <div class="gdh-kicker">ROYAL ARCHIVE</div>
+        <h2>👑 Golden Goldex History</h2>
+        <p>ရက်စွဲအလိုက် သိမ်းဆည်းထားသော 2D Results</p>
+      </div>
+      <div class="gdh-controls">
+        <label for="gdhDate">ရက်စွဲရွေးပါ</label>
+        <select id="gdhDate" aria-label="History ရက်စွဲ">
+          <option value="">History ကို ဖွင့်နေသည်...</option>
+        </select>
+        <button type="button" id="gdhRefresh">ပြန်လည်ကြည့်ရှုရန်</button>
+      </div>
+      <div id="gdhStatus" role="status">Firebase History ကို ဖွင့်နေသည်...</div>
+      <div id="gdhResults"></div>
+    `;
+
+    const style = document.createElement('style');
+    style.id = 'goldenGoldexHistoryStyles';
+    style.textContent = `
+      #goldenGoldexHistory {
+        margin: 24px 0 10px;
+        padding: 20px;
+        color: #fff5e2;
+        border: 1px solid #e6bd67;
+        border-radius: 22px;
+        background:
+          radial-gradient(ellipse at top right, #53172f 0%, transparent 52%),
+          linear-gradient(145deg, #160910, #090609);
+        box-shadow: 0 12px 32px #0008, inset 0 0 0 4px #e6bd671c;
+      }
+      #goldenGoldexHistory .gdh-heading {
+        text-align: center;
+        margin-bottom: 18px;
+      }
+      #goldenGoldexHistory .gdh-kicker {
+        color: #e6bd67;
+        letter-spacing: 4px;
+        font-size: 11px;
+      }
+      #goldenGoldexHistory h2 {
+        color: #fff0b5;
+        margin: 8px 0;
+        text-shadow: 0 0 14px #e6bd6755;
+      }
+      #goldenGoldexHistory p {
+        color: #c6aeb6;
+        font-size: 13px;
+      }
+      #goldenGoldexHistory .gdh-controls {
+        display: grid;
+        gap: 10px;
+        margin-bottom: 16px;
+      }
+      #goldenGoldexHistory label {
+        color: #e6bd67;
+        font-weight: 700;
+      }
+      #goldenGoldexHistory select,
+      #goldenGoldexHistory button {
+        width: 100%;
+        box-sizing: border-box;
+        min-height: 44px;
+        padding: 10px 12px;
+        border-radius: 11px;
+        border: 1px solid #e6bd67;
+        font: inherit;
+      }
+      #goldenGoldexHistory select {
+        background: #160910;
+        color: #fff5e2;
+      }
+      #goldenGoldexHistory button {
+        cursor: pointer;
+        color: #160910;
+        font-weight: 800;
+        background: linear-gradient(135deg, #fff0b5, #e6bd67, #8b5b19);
+      }
+      #goldenGoldexHistory #gdhStatus {
+        color: #e6bd67;
+        font-size: 13px;
+        margin: 12px 0;
+      }
+      #goldenGoldexHistory .gdh-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        margin-top: 9px;
+        padding: 13px;
+        border: 1px solid #8b5b196b;
+        border-radius: 13px;
+        background: linear-gradient(120deg, #390b20, #160910);
+      }
+      #goldenGoldexHistory .gdh-time {
+        color: #fff5e2;
+        font-weight: 700;
+      }
+      #goldenGoldexHistory .gdh-number {
+        color: #fff0b5;
+        font-size: 24px;
+        font-weight: 900;
+        text-shadow: 0 2px 0 #8b5b19, 0 0 12px #e6bd6755;
+      }
+      #goldenGoldexHistory .gdh-empty {
+        color: #c6aeb6;
+        text-align: center;
+        padding: 18px 8px;
+      }
+      @media (prefers-reduced-motion: no-preference) {
+        #goldenGoldexHistory .gdh-number {
+          animation: gdhGoldGlow 3s ease-in-out infinite alternate;
+        }
+        @keyframes gdhGoldGlow {
+          from { text-shadow: 0 2px 0 #8b5b19, 0 0 5px #e6bd6733; }
+          to { text-shadow: 0 2px 0 #8b5b19, 0 0 15px #e6bd67aa; }
+        }
+      }
+    `;
+
+    document.head.appendChild(style);
+    page.appendChild(box);
+
+    document.getElementById('gdhDate').addEventListener('change', loadSelectedHistory);
+    document.getElementById('gdhRefresh').addEventListener('click', loadResultsHistory);
+}
+
+let goldenGoldexHistoryCache = {};
+
+async function loadResultsHistory() {
+    ensureHistoryUI();
+
+    const status = document.getElementById('gdhStatus');
+    const select = document.getElementById('gdhDate');
+    const output = document.getElementById('gdhResults');
+    if (!status || !select || !output) return;
+
+    status.textContent = 'Firebase History ကို ဖွင့်နေသည်...';
+
+    try {
+        const snapshot = await HISTORY_COLLECTION
+            .orderBy('dateKey', 'desc')
+            .limit(90)
+            .get();
+
+        goldenGoldexHistoryCache = {};
+        snapshot.forEach(doc => {
+            goldenGoldexHistoryCache[doc.id] = doc.data();
+        });
+
+        const dates = Object.keys(goldenGoldexHistoryCache);
+        const previousDate = select.value;
+
+        select.innerHTML = '';
+
+        if (!dates.length) {
+            select.innerHTML = '<option value="">History မရှိသေးပါ</option>';
+            output.innerHTML =
+                '<div class="gdh-empty">Admin က Result သိမ်းဆည်းပြီးနောက် History ပေါ်လာပါမယ်။</div>';
+            status.textContent = 'သိမ်းဆည်းထားသော History မရှိသေးပါ။';
+            return;
+        }
+
+        dates.forEach(dateKey => {
+            const option = document.createElement('option');
+            option.value = dateKey;
+            option.textContent = dateKey;
+            select.appendChild(option);
+        });
+
+        select.value = dates.includes(previousDate) ? previousDate : dates[0];
+        status.textContent = `မှတ်တမ်းရှိသော ရက်စွဲ ${dates.length} ရက်`;
+        loadSelectedHistory();
+    } catch (err) {
+        console.error('History load failed:', err);
+        status.textContent =
+            'History ဖွင့်မရပါ။ Firestore Rules နှင့် Internet ကို စစ်ဆေးပါ။';
+        output.innerHTML = '';
+    }
+}
+
+function loadSelectedHistory() {
+    const select = document.getElementById('gdhDate');
+    const output = document.getElementById('gdhResults');
+    const status = document.getElementById('gdhStatus');
+    if (!select || !output || !status) return;
+
+    const dateKey = select.value;
+    const record = goldenGoldexHistoryCache[dateKey];
+
+    if (!record) {
+        output.innerHTML = '<div class="gdh-empty">ဤရက်အတွက် History မရှိသေးပါ။</div>';
+        return;
+    }
+
+    const times = record.times || {};
+
+    // Use Yangon time to hide today's results until their scheduled time.
+    const isToday = dateKey === getGoldexDateKey();
+    const now = getYangonTimeInfo();
+    const currentMinutes = now.getHours() * 60 + now.getMinutes();
+
+    const drawMinutes = {
+        '4:30 PM': 16 * 60 + 30,
+        '5:30 PM': 17 * 60 + 30,
+        '6:30 PM': 18 * 60 + 30,
+        '7:30 PM': 19 * 60 + 30,
+        '8:30 PM': 20 * 60 + 30,
+        '9:30 PM': 21 * 60 + 30
+    };
+
+    const rows = DRAW_TIMES.map(time => {
+        const scheduledMinutes = drawMinutes[time];
+        const waitingForResult =
+            isToday &&
+            scheduledMinutes !== undefined &&
+            currentMinutes < scheduledMinutes;
+
+        const value = waitingForResult
+            ? ''
+            : String(times[time] ?? '').trim();
+
+        return `
+          <div class="gdh-row">
+            <span class="gdh-time">${escapeHistoryText(time)}</span>
+            <span class="gdh-number">${escapeHistoryText(value || '--')}</span>
+          </div>
+        `;
+    }).join('');
+
+    output.innerHTML = `
+      <h3 style="color:#e6bd67;text-align:center">
+        📅 ${escapeHistoryText(dateKey)}
+      </h3>
+      ${rows}
+    `;
+
+    status.textContent = 'ဤရက်အတွက် သိမ်းဆည်းထားသော Result များ';
+}
+
+async function saveDailyResultsHistory(data) {
+    const dateKey = getGoldexDateKey();
+
+    await HISTORY_COLLECTION.doc(dateKey).set({
+        dateKey,
+        times: { ...data.times },
+        result2D: data.result2D || '',
+        goldex3D: data.goldex3D || '3**',
+        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+    }, { merge: true });
+
+    await loadResultsHistory();
+}
+// ===== END GOLDEN_Goldex_HISTORY_V1 =====
+
+
+// App စတင်ချိန်
+window.addEventListener('DOMContentLoaded', () => {
+    checkTimeAndUpdateView();
+    startMainNumberRandomizer();
+    loadFirebaseResults();
+    ensureHistoryUI();
+    loadResultsHistory();
+});
+
+// ===== PREMIUM MENU NAVIGATION =====
+function showSection(section, button) {
+    document.querySelectorAll('.result-page').forEach(page => {
+        page.classList.remove('active');
+    });
+
+    document.querySelectorAll('#mainNavigation .btn-white').forEach(btn => {
+        btn.classList.remove('active');
+    });
+
+    if (!section) return;
+
+    const page = document.getElementById('page-' + section);
+    if (page) page.classList.add('active');
+    if (button) button.classList.add('active');
+
+    if (section === 'results2d') {
+        render2DResultsPage();
+    } else if (section === 'goldex3d') {
+        renderGoldex3DPage();
+    }
+}
+
+function render2DResultsPage() {
+    const data = getData();
+    const saved = data.result2D ||
+        localStorage.getItem('millionaire_goldex_2d_result') || '';
+    const value = document.getElementById('page2dValue');
+    const message = document.getElementById('page2dMessage');
+
+    if (value) value.textContent = saved || '--';
+    if (message) {
+        message.textContent = saved ? 'လက်ရှိ 2D Result' : '2D Result မရှိသေးပါ။';
+    }
+}
+
+function renderGoldex3DPage() {
+    const data = getData();
+    const value = document.getElementById('pageGoldex3DValue');
+    const time = document.getElementById('pageGoldex3DTime');
+    if (value) value.textContent = data.goldex3D || '3**';
+    if (time) {
+        const now = getYangonTimeInfo();
+        time.textContent = 'ရန်ကုန်စံတော်ချိန်: ' + new Intl.DateTimeFormat('en-GB', {
+            timeZone: YANGON_TIMEZONE,
+            dateStyle: 'medium',
+            timeStyle: 'medium'
+        }).format(new Date());
+    }
+}
+// ===== END PREMIUM MENU NAVIGATION =====
+
+</script>
+</body>
+</html>
