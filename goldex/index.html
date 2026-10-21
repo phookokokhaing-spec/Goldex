@@ -1481,18 +1481,28 @@ function checkTimeAndUpdateView() {
     grid.innerHTML = '';
     
     DRAW_TIMES.forEach(timeStr => {
-        let displayVal = ''; 
-        let scheduledHour = 0;
-        if (timeStr === '4:30 PM') scheduledHour = 16;
-        if (timeStr === '5:30 PM') scheduledHour = 17;
-        if (timeStr === '6:30 PM') scheduledHour = 18;
-        if (timeStr === '7:30 PM') scheduledHour = 19;
-        if (timeStr === '8:30 PM') scheduledHour = 20;
-        if (timeStr === '9:30 PM') scheduledHour = 21;
+        let displayVal = '';
 
-        // အချိန်ကျော်ပြီးသားဆိုရင် ဂဏန်းပြမယ်
-        if (currentHour >= scheduledHour) {
-            displayVal = data.times[timeStr] || ''; 
+        // Yangon time: check exact scheduled hour and minute
+        const drawMinutes = {
+            '4:30 PM': 16 * 60 + 30,
+            '5:30 PM': 17 * 60 + 30,
+            '6:30 PM': 18 * 60 + 30,
+            '7:30 PM': 19 * 60 + 30,
+            '8:30 PM': 20 * 60 + 30,
+            '9:30 PM': 21 * 60 + 30
+        };
+
+        const scheduledMinutes = drawMinutes[timeStr];
+        const currentMinutes = currentHour * 60 + currentMinute;
+        const scheduledHour = Math.floor((scheduledMinutes || 0) / 60);
+
+        // Do not reveal a result before its scheduled time
+        if (
+            scheduledMinutes !== undefined &&
+            currentMinutes >= scheduledMinutes
+        ) {
+            displayVal = data.times[timeStr] || '';
         }
 
 
