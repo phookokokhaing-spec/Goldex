@@ -1401,24 +1401,33 @@ function saveData(data) {
 // ================= MAIN NUMBER RANDOMIZER (6 Sec) =================
 function startMainNumberRandomizer() {
     if (randomInterval) clearInterval(randomInterval);
-    
+
     randomInterval = setInterval(() => {
-        // အကယ်၍ ရပ်ထားရမည့်အချိန် မကျော်သေးရင် ဂဏန်းမပြောင်းဘူး
+        const bigNumEl = document.getElementById('mainBigNumber');
+
+        // Main Number element မရှိလျှင် Error မဖြစ်စေရန်
+        if (!bigNumEl) return;
+
+        // Freeze ကာလအတွင်း သတ်မှတ်ထားသော Result ကို ထိန်းထားမည်
         if (isMainNumberFrozen) {
-            if (Date.now() >= freezeUntil) {
-                // ၃၀ မိနစ် ပြည့်သွားပြီဆိုရင် ပြန်လွှတ်မယ်
-                isMainNumberFrozen = false;
-                frozenTimeKey = '';
-                freezeUntil = 0;
-            } else {
-                return; // ရပ်ထားစဉ် ဘာမှမလုပ်ဘူး
+            if (Date.now() < freezeUntil) {
+                if (frozenNumber !== '') {
+                    bigNumEl.textContent = frozenNumber;
+                }
+                return;
             }
+
+            // Freeze ကာလပြီးဆုံးပါက Randomizer ပြန်လည်စတင်မည်
+            isMainNumberFrozen = false;
+            frozenNumber = '';
+            frozenTimeKey = '';
+            freezeUntil = 0;
         }
 
-        const bigNumEl = document.getElementById('mainBigNumber');
-        let randomNum = Math.floor(Math.random() * 100);
+        // Freeze မဖြစ်နေသည့်အချိန်တွင်သာ ကျပန်းဂဏန်းပြောင်းမည်
+        const randomNum = Math.floor(Math.random() * 100);
         bigNumEl.textContent = String(randomNum).padStart(2, '0');
-        
+
         bigNumEl.classList.remove('animate-pop');
         void bigNumEl.offsetWidth;
         bigNumEl.classList.add('animate-pop');
@@ -1457,95 +1466,131 @@ function getYangonTimeInfo() {
 function checkTimeAndUpdateView() {
     const data = getData();
     const goldexNow = getYangonTimeInfo();
+
     const currentHour = goldexNow.getHours();
     const currentMinute = goldexNow.getMinutes();
     const currentSecond = goldexNow.getSeconds();
-    
-    // 3D
+    const currentMinutes = currentHour * 60 + currentMinute;
+
     const mainGoldex3DEl = document.getElementById('mainGoldex3D');
     if (mainGoldex3DEl) {
-        mainGoldex3DEl.textContent = data.goldex3D;
+        mainGoldex3DEl.textContent = data.goldex3D || '3**';
     }
-    
-    // Updated Time
+
     const y = goldexNow.getFullYear();
     const m = String(goldexNow.getMonth() + 1).padStart(2, '0');
     const d = String(goldexNow.getDate()).padStart(2, '0');
-    const h = String(goldexNow.getHours()).padStart(2, '0');
-    const min = String(goldexNow.getMinutes()).padStart(2, '0');
-    const s = String(goldexNow.getSeconds()).padStart(2, '0');
-    document.getElementById('updatedTime').textContent = `Updated : ${y}-${m}-${d} ${h}:${min}:${s}`;
 
-    // 6 Times Grid
+    const updatedTimeEl = document.getElementById('updatedTime');
+    if (updatedTimeEl) {
+        const h = String(currentHour).padStart(2, '0');
+        const min = String(currentMinute).padStart(2, '0');
+        const sec = String(currentSecond).padStart(2, '0');
+        updatedTimeEl.textContent =
+            `Updated : ${y}-${m}-${d} ${h}:${min}:${sec}`;
+    }
+
+    const drawMinutes = {
+        '4:30 PM': 16 * 60 + 30,
+        '5:30 PM': 17 * 60 + 30,
+        '6:30 PM': 18 * 60 + 30,
+        '7:30 PM': 19 * 60 + 30,
+        '8:30 PM': 20 * 60 + 30,
+        '9:30 PM': 21 * 60 + 30
+    };
+
     const grid = document.getElementById('timesGrid');
-    grid.innerHTML = '';
-    
-    DRAW_TIMES.forEach(timeStr => {
-        let displayVal = '';
+    if (grid) {
+        grid.innerHTML = '';
 
-        // Yangon time: check exact scheduled hour and minute
-        const drawMinutes = {
-            '4:30 PM': 16 * 60 + 30,
-            '5:30 PM': 17 * 60 + 30,
-            '6:30 PM': 18 * 60 + 30,
-            '7:30 PM': 19 * 60 + 30,
-            '8:30 PM': 20 * 60 + 30,
-            '9:30 PM': 21 * 60 + 30
-        };
+        for (const timeStr of DRAW_TIMES) {
+            const scheduledMinutes = drawMinutes[timeStr];
+            const resultValue = String(data.times?.[timeStr] || '').trim();
+            const isReleased =
+                scheduledMinutes !== undefined &&
+                currentMinutes >= scheduledMinutes;
 
+            const card = document.createElement('div');
+            card.className = 'time-card';
+
+            const title = document.createElement('div');
+            title.className = 'time-title';
+            title.textContent = timeStr;
+
+            const value = document.createElement('div');
+            value.className = 'time-value';
+            value.textContent = isReleased ? resultValue : '';
+
+            card.appendChild(title);
+            card.appendChild(value);
+            grid.appendChild(card);
+        }
+    }
+
+    // Result ထွက်ချိန်မှစ၍ မိနစ် ၃၀ အတွင်းသာ Main Number ကို Freeze လုပ်မည်။
+    // Result မရှိလျှင် Randomizer ကို ဆက်လက်လည်ပတ်စေမည်။
+    let activeResult = '';
+    let activeKey = '';
+    let activeEndMinute = 0;
+
+    for (const timeStr of DRAW_TIMES) {
         const scheduledMinutes = drawMinutes[timeStr];
-        const currentMinutes = currentHour * 60 + currentMinute;
-        const scheduledHour = Math.floor((scheduledMinutes || 0) / 60);
+        const resultValue = String(data.times?.[timeStr] || '').trim();
 
-        // Do not reveal a result before its scheduled time
         if (
             scheduledMinutes !== undefined &&
-            currentMinutes >= scheduledMinutes
+            resultValue !== '' &&
+            currentMinutes >= scheduledMinutes &&
+            currentMinutes < scheduledMinutes + 30
         ) {
-            displayVal = data.times[timeStr] || '';
+            activeResult = resultValue;
+            activeKey = `${y}-${m}-${d}-${timeStr}`;
+            activeEndMinute = scheduledMinutes + 30;
         }
+    }
 
+    const mainNumberEl = document.getElementById('mainBigNumber');
 
-        // MAIN NUMBER FREEZE: သတ်မှတ်ချိန်မှ မိနစ် ၃၀
-        const freezeKey = `${y}-${m}-${d}-${timeStr}`;
-        const resultValue = String(data.times[timeStr] || '').trim();
+    if (activeResult !== '') {
+        const sameFreeze = isMainNumberFrozen &&
+            frozenTimeKey === activeKey &&
+            frozenNumber === activeResult;
 
-        if (
-            currentHour === scheduledHour &&
-            currentMinute < 30 &&
-            resultValue !== ''
-        ) {
-            if (frozenTimeKey !== freezeKey) {
-                frozenTimeKey = freezeKey;
-                isMainNumberFrozen = true;
-                frozenNumber = resultValue;
-                freezeUntil = goldexNow.getTime() +
-                    ((30 - currentMinute) * 60000) -
-                    (currentSecond * 1000);
+        isMainNumberFrozen = true;
+        frozenNumber = activeResult;
+        frozenTimeKey = activeKey;
+
+        // Freeze ပြီးဆုံးမည့်အချိန်ကို အကြွင်းမဲ့ timestamp ဖြင့် သတ်မှတ်မည်။
+        // Yangon အချိန်နှင့် browser local timezone မတူခြင်းကို ရှောင်ရန်
+        // getYangonTimeInfo() ၏ wall-clock အချိန်မှ လက်ကျန်ကြာချိန်ကို တွက်မည်။
+        const remainingMs = Math.max(
+            0,
+            (activeEndMinute - currentMinutes) * 60000 -
+            currentSecond * 1000
+        );
+
+        if (!sameFreeze || !freezeUntil) {
+            freezeUntil = Date.now() + remainingMs;
+        } else {
+            // Freeze တူညီနေပါက timestamp ကို မလိုအပ်ဘဲ မပြောင်းပါ။
+            const expectedRemainingMs = remainingMs;
+            const actualRemainingMs = freezeUntil - Date.now();
+
+            if (Math.abs(actualRemainingMs - expectedRemainingMs) > 2000) {
+                freezeUntil = Date.now() + expectedRemainingMs;
             }
-
-            if (isMainNumberFrozen && Date.now() < freezeUntil) {
-                document.getElementById('mainBigNumber').textContent =
-                    frozenNumber;
-            }
         }
 
-        if (isMainNumberFrozen && Date.now() >= freezeUntil) {
-            isMainNumberFrozen = false;
-            frozenTimeKey = '';
-            freezeUntil = 0;
+        if (mainNumberEl) {
+            mainNumberEl.textContent = frozenNumber;
         }
-
-        const card = document.createElement('div');
-        card.className = 'time-card';
-        card.innerHTML = `
-            <div class="time-title">${timeStr}</div>
-            <div class="time-value">${displayVal}</div>
-        `;
-        grid.appendChild(card);
-    });
+    } else {
+        isMainNumberFrozen = false;
+        frozenNumber = '';
+        frozenTimeKey = '';
+        freezeUntil = 0;
+    }
 }
-
 // စက္ကန့်တိုင်း လက်ရှိအချိန်ကို စစ်မယ်
 setInterval(checkTimeAndUpdateView, 1000);
 
